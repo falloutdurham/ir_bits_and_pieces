@@ -153,11 +153,15 @@ class QrelGenerator:
         prompt = self.query_prompt_template.format(document=document)
 
         # Use Fireworks SDK directly
-        completion = fireworks.client.Completion.create(
-            model=self.model_name, prompt=prompt, temperature=0.7, max_tokens=50
-        )
+        try:
+            completion = fireworks.client.Completion.create(
+                model=self.model_name, prompt=prompt, temperature=0.7, max_tokens=50
+            )
 
-        return completion.choices[0].text.strip()
+            return completion.choices[0].text.strip()
+        except Exception as e:
+            print(f"Error generating queries for document {doc_id}: {e}")
+            return []
 
     def judge_relevance(self, query: str, doc_id: str) -> int:
         """
@@ -174,22 +178,26 @@ class QrelGenerator:
         prompt = self.judge_prompt_template.format(query=query, document=document)
 
         # Use Fireworks SDK directly
-        completion = fireworks.client.Completion.create(
-            model=self.model_name, prompt=prompt, temperature=0.2, max_tokens=5
-        )
-
-        # Extract numeric score
-        result = completion.choices[0].text.strip()
         try:
-            # Extract first digit from response
-            for char in result:
-                if char.isdigit():
-                    score = int(char)
-                    if 0 <= score <= 2:
-                        return score
-            # Default to 0 if no valid digit found
-            return 0
-        except:
+            completion = fireworks.client.Completion.create(
+                model=self.model_name, prompt=prompt, temperature=0.2, max_tokens=5
+            )
+
+            # Extract numeric score
+            result = completion.choices[0].text.strip()
+            try:
+                # Extract first digit from response
+                for char in result:
+                    if char.isdigit():
+                        score = int(char)
+                        if 0 <= score <= 2:
+                            return score
+                # Default to 0 if no valid digit found
+                return 0
+            except:
+                return 0
+        except Exception as e:
+            print(f"Error judging queries for document {doc_id}: {e}")
             return 0
 
     def generate_qrels(
