@@ -192,7 +192,10 @@ class QrelGenerator:
                             return score
                 # Default to 0 if no valid digit found
                 return 0
-            except:
+            except Exception as e:
+                print(
+                    f"failed extraction in judging queries for document {doc_id}: {e}"
+                )
                 return 0
         except Exception as e:
             print(f"Error judging queries for document {doc_id}: {e}")
@@ -227,7 +230,7 @@ class QrelGenerator:
 
         # Generate queries and judgments
         for i, doc_id in enumerate(tqdm(seed_docs, desc="Generating queries")):
-            query_id = f"Q{i+1}"
+            query_id = f"Q{i + 1}"
 
             # Generate query
             query_text = self.generate_query(doc_id)
@@ -242,7 +245,7 @@ class QrelGenerator:
             # Judge only top-k documents (excluding the seed document)
             for candidate_doc_id in tqdm(
                 top_k_docs,
-                desc=f"Judging docs for query {i+1}/{num_queries}",
+                desc=f"Judging docs for query {i + 1}/{num_queries}",
                 leave=False,
             ):
                 if candidate_doc_id != doc_id:
