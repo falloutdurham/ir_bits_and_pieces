@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "croker"
+version = "0.1.0"
+description = "Croker is a tool for generating qrels for information retrieval tasks."
+readme = "README.md"
+authors = [
+    {name = "Ian Pointer", email = "ian@falloutdurham.com"},
+]
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "polars>=0.20.0",
+    "numpy>=1.20.0",
+    "rank-bm25>=0.2.2",
+    "tqdm>=4.65.0",
+    "fireworks-ai>=0.8.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+]
+
+[project.scripts]
+croker = "croker:main"
+
+[tool.black]
+line-length = 100
+target-version = ["py38"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.hatch.build.targets.wheel]
+packages = ["croker"]
