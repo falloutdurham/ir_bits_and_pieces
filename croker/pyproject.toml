@@ -22,26 +22,11 @@ dependencies = [
     "tqdm>=4.65.0",
     "fireworks-ai>=0.8.0",
     "pyyaml>=6.0",
-]
-
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.0.0",
-    "black>=23.0.0",
-    "isort>=5.12.0",
-    "flake8>=6.0.0",
+    "ruff>=0.11.0",
 ]
 
 [project.scripts]
 croker = "croker:main"
-
-[tool.black]
-line-length = 100
-target-version = ["py38"]
-
-[tool.isort]
-profile = "black"
-line_length = 100
 
 [tool.hatch.build.targets.wheel]
 packages = ["croker"]
